@@ -76,4 +76,4 @@ with open("/Users/markscharmann/AdventOfCode/assets/day_3_2024.txt", "r") as fil
 
     print(total_product_instructions)
 
-# too low 20835565
+# too low 20835565 111762583

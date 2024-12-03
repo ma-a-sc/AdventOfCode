@@ -21,7 +21,6 @@ def process_line(s: str) -> int:
     # parse out the subs
 
     for arr in sub_arrs:
-        # this does not work
         if arr[:3] != "mul" or arr[3] != "(":
             continue
         print(arr)
@@ -52,7 +51,6 @@ def pre_process(s: str) -> str:
     split_by_dont = s.split("don't")
     all_enabled = []
     for sub_line in split_by_dont:
-        # multiple do's behind each other brick my logic
         do_splits = sub_line.split("do()")
         for right_of_do in do_splits[1:]:
             all_enabled.append(right_of_do)

@@ -1,4 +1,3 @@
-
 # read in the file and fill two arrays
 
 # sort the two arrays

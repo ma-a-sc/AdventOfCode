@@ -7,15 +7,22 @@
 # I CAN CUT OUT THE SUB ARRAYS FROM don't() until including do() and then just use my function again but for that I need to treat the lines as one big string and not process line by line cause then I could end up with a dont at the end of the line and having no
 # effect
 
+
 def process_line(s: str) -> int:
     line_score = 0
     sub_arrs = []
     # check which sub arrays to check
     # all sub arrays have the important special chars and mul in it
     for x in range(len(s) - 11):
-        sub = s[x:x+12]
+        sub = s[x : x + 12]
         # this fails if the end of the string is 12xmul(1,2)) eg. cause it wont ever satisfy this condition but the input does not end with that so I will ignore it.
-        if "mul" in sub and "(" in sub and ")" in sub and "," in sub and sub[:3] == "mul":
+        if (
+            "mul" in sub
+            and "(" in sub
+            and ")" in sub
+            and "," in sub
+            and sub[:3] == "mul"
+        ):
             sub_arrs.append(sub)
     print(sub_arrs)
     # parse out the subs
@@ -46,8 +53,8 @@ def process_line(s: str) -> int:
 
     return line_score
 
-def pre_process(s: str) -> str:
 
+def pre_process(s: str) -> str:
     split_by_dont = s.split("don't")
     all_enabled = []
     for sub_line in split_by_dont:
@@ -57,6 +64,7 @@ def pre_process(s: str) -> str:
 
     print(all_enabled)
     return "".join(all_enabled)
+
 
 total_product_instructions = 0
 with open("/Users/markscharmann/AdventOfCode/assets/day_3_2024.txt", "r") as file:

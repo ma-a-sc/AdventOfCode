@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 def order_update(update: tuple[int, ...]) -> tuple[int, ...]:
     # in theory I could just make it simple and inefficient
     # just get all possible orderings of the update and then
@@ -15,7 +16,9 @@ def order_update(update: tuple[int, ...]) -> tuple[int, ...]:
     all_arrays_build_by_rule: list[list[int]] = []
     for index, entry in enumerate(update):
         rules_for_entry = page_order_rules[entry]
-        all_arrays_build_by_rule.append([entry]+[x for x in rules_for_entry if x in update])
+        all_arrays_build_by_rule.append(
+            [entry] + [x for x in rules_for_entry if x in update]
+        )
 
     # sort the arrs build by rule by their length
     all_arrays_build_by_rule.sort(key=len)
@@ -23,17 +26,21 @@ def order_update(update: tuple[int, ...]) -> tuple[int, ...]:
     # now get from every list the first entry and build out the correct update
     return tuple(x[0] for x in all_arrays_build_by_rule)
 
+
 def check_update(update: tuple[int, ...]) -> int:
     middle = 0
     rules_applied: list[bool] = []
     for index, entry in enumerate(update):
         rules_for_entry = page_order_rules[entry]
-        rules_applied.append(all([update.index(e) >= index for e in rules_for_entry if e in update]))
+        rules_applied.append(
+            all([update.index(e) >= index for e in rules_for_entry if e in update])
+        )
 
     if not all(rules_applied):
         new_update = order_update(update)
-        return new_update[len(new_update)//2]
+        return new_update[len(new_update) // 2]
     return middle
+
 
 page_order_rules: dict[int, list[int]] = defaultdict(list)
 update_list: list[tuple[int, ...]] = []

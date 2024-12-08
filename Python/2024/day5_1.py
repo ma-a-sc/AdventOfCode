@@ -1,16 +1,19 @@
 from collections import defaultdict
 
+
 def check_update(update: tuple[int, ...]) -> int:
     middle = 0
     rules_applied: list[bool] = []
     for index, entry in enumerate(update):
         rules_for_entry = page_order_rules[entry]
-        rules_applied.append(all([update.index(e) >= index for e in rules_for_entry if e in update]))
-
+        rules_applied.append(
+            all([update.index(e) >= index for e in rules_for_entry if e in update])
+        )
 
     if all(rules_applied):
-        return update[len(update)//2]
+        return update[len(update) // 2]
     return middle
+
 
 page_order_rules: dict[int, list[int]] = defaultdict(list)
 update_list: list[tuple[int, ...]] = []

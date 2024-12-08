@@ -4,8 +4,9 @@ from typing import NamedTuple, Set, Tuple, List
 import math
 import copy
 
-class EndOfMatrixFound(Exception):
-    ...
+
+class EndOfMatrixFound(Exception): ...
+
 
 class Direction(Enum):
     TOP = 0
@@ -13,17 +14,17 @@ class Direction(Enum):
     BOTTOM = 2
     LEFT = 3
 
+
 def check_arr_in_arr_number(arr_short: list, arr_long: list) -> int:
     contains = 0
     for x in range(len(arr_long) - len(arr_short)):
-        if arr_short == arr_long[x: x + len(arr_short)]:
+        if arr_short == arr_long[x : x + len(arr_short)]:
             contains += 1
 
     return contains
 
+
 class LabFloor(object):
-
-
     def __init__(self):
         self.matrix: list[list[str]] = []
         self.modified_matrix: list[list[str]] = []
@@ -36,7 +37,6 @@ class LabFloor(object):
         self.route: List = []
         self.min_sub_array_length = 4
         self.possible_opstruction_positions: Set = set()
-
 
     def set_guard_init_position(self):
         for y_coordinate, row in enumerate(self.matrix):
@@ -108,7 +108,6 @@ class LabFloor(object):
             case _:
                 raise ValueError
 
-
     def set_new_guard_pos(self, pos: NamedTuple) -> None:
         self.guard_position = pos
 
@@ -118,7 +117,9 @@ class LabFloor(object):
     def traverse_matrix(self):
         while True:
             try:
-                next_step_possible, next_point, direction = self.check_next_step_possible()
+                next_step_possible, next_point, direction = (
+                    self.check_next_step_possible()
+                )
                 if not next_step_possible:
                     self.set_new_guard_direction(direction)
                 else:
@@ -133,13 +134,14 @@ class LabFloor(object):
         if not len(self.route) >= self.min_sub_array_length * 2:
             return False
 
-
         max_sub_array_length = math.floor(len(self.route) / 2)
         # everything until here now makes sense
-        for possible_length in range(self.min_sub_array_length, max_sub_array_length + 1):
+        for possible_length in range(
+            self.min_sub_array_length, max_sub_array_length + 1
+        ):
             for start_pos_of_sub_arr, _ in enumerate(self.route):
                 end_position = start_pos_of_sub_arr + possible_length
-                sub_arr = self.route[start_pos_of_sub_arr: end_position]
+                sub_arr = self.route[start_pos_of_sub_arr:end_position]
                 # setting it to 4 did the trick instead of 2? probably some overlap in paths when setting some obstacles
                 if check_arr_in_arr_number(sub_arr, self.route) >= 3:
                     return True
@@ -150,7 +152,9 @@ class LabFloor(object):
         counter = 0
         while True:
             try:
-                next_step_possible, next_point, direction = self.check_next_step_possible(altered_matrix=True)
+                next_step_possible, next_point, direction = (
+                    self.check_next_step_possible(altered_matrix=True)
+                )
                 if not next_step_possible:
                     self.set_new_guard_direction(direction)
                     counter += 1
@@ -172,7 +176,6 @@ class LabFloor(object):
     def copy_over_init_matrix_and_override_modified(self):
         self.modified_matrix = copy.deepcopy(self.matrix)
 
-
     def prep_for_next_obstruction_run(self, point):
         self.copy_over_init_matrix_and_override_modified()
         self.route = []
@@ -184,29 +187,30 @@ class LabFloor(object):
         for point in self.positions:
             print(point)
             if point == self.not_possible_position:
-               continue
+                continue
             self.prep_for_next_obstruction_run(point)
             loop_found = self.traverse_altered_matrix()
             if loop_found:
-               self.possible_opstruction_positions.add(point)
+                self.possible_opstruction_positions.add(point)
+
 
 grid = [
-                    ['.', '.', '.', '.', '#', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '#'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '#', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '#', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '#', '.', '.', '^', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '#', '.'],
-                    ['#', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '#', '.', '.', '.']
-                ]
+    [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "#"],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", "#", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "#", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", "#", ".", ".", "^", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", "#", "."],
+    ["#", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", "#", ".", ".", "."],
+]
 
 with open("/Users/markscharmann/AdventOfCode/assets/day_6_2024.txt", "r") as file:
     lab_floor = LabFloor()
     lab_floor.matrix = grid
-    #for row in file:
+    # for row in file:
     #    lab_floor.matrix.append([x for x in row.strip()])
 
     lab_floor.set_guard_init_position()
@@ -215,7 +219,6 @@ with open("/Users/markscharmann/AdventOfCode/assets/day_6_2024.txt", "r") as fil
     # the easy way to calculate these would be to take the path the guard takes and place and obstacle at every possible position once, except the initial one and then let the algo run once to see if the guard gets stuck in a loop.
     # very inefficient cause we would do that a few thousand times. But it gets the job done.
     lab_floor.calc_number_of_possible_obstructions()
-
 
     print(lab_floor.possible_opstruction_positions)
 

@@ -1,4 +1,5 @@
 from collections import defaultdict
+
 #
 # first up build the arrays
 left_arr = []
@@ -16,7 +17,7 @@ for entry in right_arr:
 
 total_similarity = 0
 for entry in left_arr:
-    total_similarity += (int(entry) * d[entry])
+    total_similarity += int(entry) * d[entry]
     print(total_similarity)
 
 print(total_similarity)

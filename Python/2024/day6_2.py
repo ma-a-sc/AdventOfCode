@@ -4,8 +4,9 @@ from typing import NamedTuple, Set, Tuple, List
 import math
 import copy
 
-class EndOfMatrixFound(Exception):
-    ...
+
+class EndOfMatrixFound(Exception): ...
+
 
 class Direction(Enum):
     TOP = 0
@@ -13,9 +14,8 @@ class Direction(Enum):
     BOTTOM = 2
     LEFT = 3
 
+
 class LabFloor(object):
-
-
     def __init__(self):
         self.matrix: list[list[str]] = []
         self.point = namedtuple("point", "x, y")
@@ -27,7 +27,6 @@ class LabFloor(object):
         self.route: List = []
         self.turn_points: Set = set()
         self.possible_opstruction_positions: Set = set()
-
 
     def set_guard_init_position(self):
         for y_coordinate, row in enumerate(self.matrix):
@@ -41,7 +40,7 @@ class LabFloor(object):
             case Direction.TOP:
                 pos = self.point(x=self.guard_position.x, y=self.guard_position.y - 1)
                 try:
-                        block = self.matrix[pos.y][pos.x]
+                    block = self.matrix[pos.y][pos.x]
                 except IndexError:
                     raise EndOfMatrixFound()
 
@@ -53,7 +52,7 @@ class LabFloor(object):
             case Direction.RIGHT:
                 pos = self.point(x=self.guard_position.x + 1, y=self.guard_position.y)
                 try:
-                        block = self.matrix[pos.y][pos.x]
+                    block = self.matrix[pos.y][pos.x]
                 except IndexError:
                     raise EndOfMatrixFound()
 
@@ -65,7 +64,7 @@ class LabFloor(object):
             case Direction.BOTTOM:
                 pos = self.point(x=self.guard_position.x, y=self.guard_position.y + 1)
                 try:
-                        block = self.matrix[pos.y][pos.x]
+                    block = self.matrix[pos.y][pos.x]
                 except IndexError:
                     raise EndOfMatrixFound()
 
@@ -76,7 +75,7 @@ class LabFloor(object):
             case Direction.LEFT:
                 pos = self.point(x=self.guard_position.x - 1, y=self.guard_position.y)
                 try:
-                        block = self.matrix[pos.y][pos.x]
+                    block = self.matrix[pos.y][pos.x]
                 except IndexError:
                     raise EndOfMatrixFound()
 
@@ -87,7 +86,6 @@ class LabFloor(object):
             case _:
                 raise ValueError
 
-
     def set_new_guard_pos(self, pos: NamedTuple) -> None:
         self.guard_position = pos
 
@@ -97,7 +95,9 @@ class LabFloor(object):
     def traverse_matrix(self):
         while True:
             try:
-                next_step_possible, next_point, direction = self.check_next_step_possible()
+                next_step_possible, next_point, direction = (
+                    self.check_next_step_possible()
+                )
                 if not next_step_possible:
                     self.set_new_guard_direction(direction)
                 else:
@@ -113,7 +113,9 @@ class LabFloor(object):
         while True:
             match self.guard_facing_direction:
                 case Direction.TOP:
-                    pos = self.point(x=self.guard_position.x, y=self.guard_position.y - 1)
+                    pos = self.point(
+                        x=self.guard_position.x, y=self.guard_position.y - 1
+                    )
                     try:
                         block = self.matrix[pos.y][pos.x]
                     except IndexError:
@@ -126,7 +128,9 @@ class LabFloor(object):
                     return pos, turn_times
 
                 case Direction.RIGHT:
-                    pos = self.point(x=self.guard_position.x + 1, y=self.guard_position.y)
+                    pos = self.point(
+                        x=self.guard_position.x + 1, y=self.guard_position.y
+                    )
                     try:
                         block = self.matrix[pos.y][pos.x]
                     except IndexError:
@@ -139,30 +143,34 @@ class LabFloor(object):
                     return pos, turn_times
 
                 case Direction.BOTTOM:
-                    pos = self.point(x=self.guard_position.x, y=self.guard_position.y + 1)
+                    pos = self.point(
+                        x=self.guard_position.x, y=self.guard_position.y + 1
+                    )
                     try:
                         block = self.matrix[pos.y][pos.x]
                     except IndexError:
                         raise EndOfMatrixFound()
 
                     if block == "#" or pos == obstruction:
-                        self.guard_facing_direction =Direction.LEFT
+                        self.guard_facing_direction = Direction.LEFT
                         turn_times += 1
                         continue
 
                     return pos, turn_times
                 case Direction.LEFT:
-                        pos = self.point(x=self.guard_position.x - 1, y=self.guard_position.y)
-                        try:
-                            block = self.matrix[pos.y][pos.x]
-                        except IndexError:
-                            raise EndOfMatrixFound()
+                    pos = self.point(
+                        x=self.guard_position.x - 1, y=self.guard_position.y
+                    )
+                    try:
+                        block = self.matrix[pos.y][pos.x]
+                    except IndexError:
+                        raise EndOfMatrixFound()
 
-                        if block == "#" or pos == obstruction:
-                            self.guard_facing_direction = Direction.TOP
-                            turn_times += 1
-                            continue
-                        return pos, turn_times
+                    if block == "#" or pos == obstruction:
+                        self.guard_facing_direction = Direction.TOP
+                        turn_times += 1
+                        continue
+                    return pos, turn_times
                 case _:
                     raise ValueError
 
@@ -190,29 +198,30 @@ class LabFloor(object):
         for point in self.positions:
             print(point)
             if point == self.not_possible_position:
-               continue
+                continue
             self.prep_for_next_obstruction_run()
             loop_found = self.traverse_altered_matrix(point)
             if loop_found:
-               self.possible_opstruction_positions.add(point)
+                self.possible_opstruction_positions.add(point)
+
 
 grid = [
-                    ['.', '.', '.', '.', '#', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '#'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '#', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '#', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '#', '.', '.', '^', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '#', '.'],
-                    ['#', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '#', '.', '.', '.']
-                ]
+    [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "#"],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", "#", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "#", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", "#", ".", ".", "^", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", "#", "."],
+    ["#", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", "#", ".", ".", "."],
+]
 
 with open("/Users/markscharmann/AdventOfCode/assets/day_6_2024.txt", "r") as file:
     lab_floor = LabFloor()
     lab_floor.matrix = grid
-    #for row in file:
+    # for row in file:
     #    lab_floor.matrix.append([x for x in row.strip()])
 
     lab_floor.set_guard_init_position()
@@ -221,7 +230,6 @@ with open("/Users/markscharmann/AdventOfCode/assets/day_6_2024.txt", "r") as fil
     # the easy way to calculate these would be to take the path the guard takes and place and obstacle at every possible position once, except the initial one and then let the algo run once to see if the guard gets stuck in a loop.
     # very inefficient cause we would do that a few thousand times. But it gets the job done.
     lab_floor.calc_number_of_possible_obstructions()
-
 
     print(lab_floor.possible_opstruction_positions)
     print(len(lab_floor.possible_opstruction_positions))

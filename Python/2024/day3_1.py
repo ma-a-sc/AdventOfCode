@@ -2,13 +2,14 @@
 
 # the max length of a correct output would be mul(xxx,yyy) so length of 12, could also (xxx,yyy)mul
 
+
 def process_line(s: str) -> int:
     line_score = 0
     sub_arrs = []
     # check which sub arrays to check
     # all sub arrays have the important special chars and mul in it
     for x in range(len(s) - 12):
-        sub = s[x:x+12]
+        sub = s[x : x + 12]
 
         if "mul" in sub and "(" in sub and ")" in sub and "," in sub:
             sub_arrs.append(sub)
@@ -39,6 +40,7 @@ def process_line(s: str) -> int:
         line_score += int(left) * int(right)
 
     return line_score
+
 
 total_product_instructions = 0
 with open("/Users/markscharmann/AdventOfCode/assets/day_3_2024.txt", "r") as file:

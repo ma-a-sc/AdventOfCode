@@ -2,6 +2,7 @@
 # not very efficient but with this approach I do not have to improve much of the way how I was handling things in the first place and dont have to figure out the
 # bad level. My approach was never good at finding the specific bad level
 
+
 def check_safe(l: list) -> bool:
     diff_arr = [l[x] - l[x + 1] for x in range(len(l) - 1)]
     # no two numbers next to each other are the same

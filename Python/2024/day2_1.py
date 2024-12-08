@@ -18,9 +18,12 @@ def check_safe(l: list) -> bool:
 
     return True
 
+
 total_safe_levels = 0
 with open("/Users/markscharmann/AdventOfCode/assets/day_2_2024.txt", "r") as file:
     for line in file:
-        total_safe_levels += 1 if check_safe([int(i) for i in line.strip().split(" ")]) else 0
+        total_safe_levels += (
+            1 if check_safe([int(i) for i in line.strip().split(" ")]) else 0
+        )
 
 print(total_safe_levels)

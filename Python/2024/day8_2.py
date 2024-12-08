@@ -42,7 +42,9 @@ class FieldProcessor(object):
                     xd=abs(refernece_antenna.x - other_antenna.x),
                 )
 
-                counter = 0
+                # is it possbile that the multiplication removed the
+
+                counter = 1
                 while True:
                     point_for_reference_antenna = point(
                         y=refernece_antenna.y - (absolut_distance.yd * counter)
@@ -62,11 +64,14 @@ class FieldProcessor(object):
                             entry = self.field_grid[point_for_reference_antenna.y][
                                 point_for_reference_antenna.x
                             ]
-                            self.antinotes.add(point_for_reference_antenna)
+                            if entry == ".":
+                                self.antinotes.add(point_for_reference_antenna)
+                        else:
+                            break
                     except IndexError:
                         break
 
-                counter = 0
+                counter = 1
                 while True:
                     point_for_other_antenna = point(
                         y=other_antenna.y - (absolut_distance.yd * counter)
@@ -86,7 +91,10 @@ class FieldProcessor(object):
                             entry = self.field_grid[point_for_other_antenna.y][
                                 point_for_other_antenna.x
                             ]
-                            self.antinotes.add(point_for_other_antenna)
+                            if entry == ".":
+                                self.antinotes.add(point_for_other_antenna)
+                        else:
+                            break
                     except IndexError:
                         break
 
@@ -95,12 +103,6 @@ with open("/Users/markscharmann/AdventOfCode/assets/day_8_2024.txt", "r") as fil
     input = []
     for row in file:
         input.append(row.strip())
-    print(input)
-    processor = FieldProcessor(input)
-    processor.determine_points_of_ani_nodes()
-    print(processor.antinotes)
-    print(len(processor.antinotes))
-
 test_input = [
     "............",
     "........0...",
@@ -115,8 +117,22 @@ test_input = [
     "............",
     "............",
 ]
+test_input_2 = [
+    "T.........",
+    "...T......",
+    ".T........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+]
 
-processor = FieldProcessor(test_input)
+processor = FieldProcessor(input)
 processor.determine_points_of_ani_nodes()
-print(processor.antinotes)
-print(len(processor.antinotes))
+sum_of_antennas = sum([len(value) for key, value in processor.antenna_data.items()])
+sum_of_antinoed = len(processor.antinotes)
+
+print(sum_of_antinoed + sum_of_antennas)
